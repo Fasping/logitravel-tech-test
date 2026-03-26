@@ -1,13 +1,29 @@
 import { useState } from 'react';
 
 function App() {
-  const [items, setItems] = useState(['Item 1', 'Item 2', 'Item 3', 'Item 4']);
+  const [items, setItems] = useState([
+    { id: 1, text: 'Item 1' },
+    { id: 2, text: 'Item 2' },
+    { id: 3, text: 'Item 3' },
+    { id: 4, text: 'Item 4' },
+  ]);
   const [inputValue, setInputValue] = useState('');
+  const [selectedId, setSelectedId] = useState(null);
 
   const handleAddItem = () => {
     if (inputValue.trim()) {
-      setItems([...items, inputValue.trim()]);
+      setItems([
+        ...items,
+        { id: Date.now(), text: inputValue.trim() }
+      ]);
       setInputValue('');
+    }
+  };
+
+  const handleDeleteItem = () => {
+    if (selectedId !== null) {
+      setItems(items.filter(item => item.id !== selectedId));
+      setSelectedId(null);
     }
   };
 
@@ -24,9 +40,13 @@ function App() {
         <p className="description">Manage your items in this simple list container.</p>
         
         <div className="list-container">
-          {items.map((item, index) => (
-            <div key={index} className="list-item">
-              {item}
+          {items.map((item) => (
+            <div 
+              key={item.id} 
+              className={`list-item ${selectedId === item.id ? 'selected' : ''}`}
+              onClick={() => setSelectedId(item.id)}
+            >
+              {item.text}
             </div>
           ))}
         </div>
@@ -43,6 +63,13 @@ function App() {
         </div>
 
         <div className="actions">
+          <button 
+            className="btn-secondary" 
+            onClick={handleDeleteItem}
+            disabled={selectedId === null}
+          >
+            DELETE
+          </button>
           <button className="btn-primary" onClick={handleAddItem}>
             ADD
           </button>
