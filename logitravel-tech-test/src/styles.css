@@ -52,6 +52,7 @@ body {
   background-color: #ffffff;
   max-height: 300px;
   overflow-y: auto;
+  user-select: none;
 }
 
 .list-item {
@@ -104,6 +105,7 @@ body {
 /* Actions */
 .actions {
   display: flex;
+  align-items: center;
   justify-content: flex-end;
   gap: 12px;
 }
@@ -130,7 +132,7 @@ body {
 
 .btn-secondary {
   background-color: transparent;
-  color: #ef4444;
+  color: #ef4444; 
   border: 1px solid #cbd5e1;
   border-radius: 8px;
   padding: 10px 24px;
@@ -142,7 +144,7 @@ body {
 
 .btn-secondary:hover:not(:disabled) {
   background-color: #f8fafc;
-  color: #ef4444;
+  color: #ef4444; 
   border-color: #ef4444;
 }
 
@@ -155,4 +157,17 @@ body {
   border-color: #e2e8f0;
   cursor: not-allowed;
   background-color: transparent;
+}
+
+/* Specific styles for the undo button to push it left if desired or style it compactly */
+.btn-undo {
+  margin-right: auto; /* Pushes the undo button to the left */
+  color: #64748b;
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+.btn-undo:hover:not(:disabled) {
+  color: #334155;
+  border-color: #94a3b8;
 }

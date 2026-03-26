@@ -9,9 +9,13 @@ function App() {
   ]);
   const [inputValue, setInputValue] = useState('');
   const [selectedId, setSelectedId] = useState(null);
+  
+  // History will store arrays of previous items
+  const [history, setHistory] = useState([]);
 
   const handleAddItem = () => {
     if (inputValue.trim()) {
+      setHistory([...history, items]);
       setItems([
         ...items,
         { id: Date.now(), text: inputValue.trim() }
@@ -20,9 +24,26 @@ function App() {
     }
   };
 
-  const handleDeleteItem = () => {
-    if (selectedId !== null) {
-      setItems(items.filter(item => item.id !== selectedId));
+  const removeItem = (idToRemove) => {
+    if (!idToRemove) return;
+    setHistory([...history, items]);
+    setItems(items.filter(item => item.id !== idToRemove));
+    
+    // Clear selection if the removed item was currently selected
+    if (selectedId === idToRemove) {
+      setSelectedId(null);
+    }
+  };
+
+  const handleUndo = () => {
+    if (history.length === 0) return;
+    
+    const previousItems = history[history.length - 1];
+    setHistory(history.slice(0, -1));
+    setItems(previousItems);
+    
+    // If the currently selected item doesn't exist in the restored state, clear selection
+    if (selectedId && !previousItems.find(item => item.id === selectedId)) {
       setSelectedId(null);
     }
   };
@@ -45,6 +66,7 @@ function App() {
               key={item.id} 
               className={`list-item ${selectedId === item.id ? 'selected' : ''}`}
               onClick={() => setSelectedId(item.id)}
+              onDoubleClick={() => removeItem(item.id)}
             >
               {item.text}
             </div>
@@ -64,8 +86,17 @@ function App() {
 
         <div className="actions">
           <button 
+            className="btn-secondary btn-undo" 
+            onClick={handleUndo}
+            disabled={history.length === 0}
+            title="Undo last action"
+          >
+            &#x21BA; UNDO
+          </button>
+          
+          <button 
             className="btn-secondary" 
-            onClick={handleDeleteItem}
+            onClick={() => removeItem(selectedId)}
             disabled={selectedId === null}
           >
             DELETE
